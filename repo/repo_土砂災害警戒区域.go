@@ -3,6 +3,7 @@ package repo
 import (
 	"archive/zip"
 	"encoding/json"
+	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -76,9 +77,11 @@ func (s *土砂災害警戒区域) GetData(opts GetDataOpts) (io.Reader, error) 
 					}
 
 					w.Write(b)
+					fmt.Printf("B is %+v \n\n", string(b))
 					w.Write([]byte("\n"))
 				}
 			}
+
 		}
 		w.Close()
 	}()

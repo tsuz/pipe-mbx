@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"bufio"
 	"io"
 	"pipe-mbx/model"
 
@@ -28,28 +27,6 @@ func NewSaveRepo() (SaveRepo, error) {
 
 type GetDataOpts struct {
 	RawDataPath string
-}
-
-func (r *repo) Save(geojsonld io.Reader, file io.Writer) error {
-
-	file.Write([]byte(`
-{
-	"type": "FeatureCollection",
-	"features": [`))
-
-	scanner := bufio.NewScanner(geojsonld)
-
-	for scanner.Scan() {
-		file.Write([]byte(scanner.Text()))
-		file.Write([]byte(","))
-	}
-
-	file.Write([]byte(`
-	]
-}`))
-
-	_, err := io.Copy(file, geojsonld)
-	return errors.Wrap(err, "Error copying bytes")
 }
 
 func (r *repo) Upload() error {
