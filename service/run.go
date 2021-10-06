@@ -35,7 +35,5 @@ func (s *svc) Run() error {
 		return errors.Wrap(err, "Error saving data")
 	}
 
-	log.Info("Creating Mapbox Layer...")
-
 	return errors.Wrap(err, "Error coyping reader to writer")
 }
