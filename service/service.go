@@ -15,6 +15,7 @@ type Opts struct {
 	DataType    string
 	Outcome     model.OutcomeType
 	RawDataPath string
+	SavePath    string
 }
 
 type Service interface {

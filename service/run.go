@@ -27,7 +27,11 @@ func (s *svc) Run() error {
 	}
 
 	log.Info("Saving Data...")
-	file, err := os.Create("merged.geojson")
+	savePath := s.opts.SavePath
+	if savePath == "" {
+		savePath = "merged.geojson"
+	}
+	file, err := os.Create(savePath)
 	if err != nil {
 		return errors.Wrap(err, "Error creating file")
 	}

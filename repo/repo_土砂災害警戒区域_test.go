@@ -1,11 +1,11 @@
 package repo
 
 import (
-	"archive/zip"
 	"bufio"
 	"encoding/json"
-	"os"
 	"testing"
+
+	testdata "pipe-mbx/testdata"
 
 	geojson "github.com/paulmach/go.geojson"
 	"github.com/pkg/errors"
@@ -14,73 +14,12 @@ import (
 func Test土砂災害警戒区域(t *testing.T) {
 
 	// setup a mock zip file with contents
-	path := "./zipdata.zip"
-	outFile, err := os.Create(path)
-	if err != nil {
-		t.Fatal(errors.Wrapf(err, "Error creating file: %+v", path))
-	}
-	defer outFile.Close()
-	w := zip.NewWriter(outFile)
-	f1path := path + "/GeoJSON/file1.geojson"
-	f1, err := w.Create(f1path)
-	if err != nil {
-		t.Fatal(errors.Wrapf(err, "Error creating file: %+v", f1path))
-	}
-	f1str := `{
-		"type": "FeatureCollection",
-		"features": [{ 
-			"type": "Feature",
-			"properties": {
-			"A33_001": "3",
-			"A33_002": "3", 
-			"A33_003": "01", 
-			"A33_004": "3-9-206-669-0022", 
-			"A33_005": "霧里6", 
-			"A33_006": "釧路市", 
-			"A33_007": "9999/1/1", 
-			"A33_008": "0"
-			}, 
-		"geometry": { 
-			"type": "MultiPolygon", 
-			"coordinates": [ [ [ 
-				[ 143.799973406, 42.963843186 ], [ 143.799562832, 42.963540014 ] 
-			] ] ]
-		}
-	}`
-	f1.Write([]byte(f1str))
-	f2path := path + "/GeoJSON/file2.geojson"
-	f2, err := w.Create(f2path)
-	if err != nil {
-		t.Fatal(errors.Wrapf(err, "Error creating file: %+v", f2path))
-	}
-	f2str := `
-	{
-		"type": "FeatureCollection",
-		"features": [{ 
-			"type": "Feature",
-			"properties":  { 
-				"A33_001": "3", 
-				"A33_002": "3", 
-				"A33_003": "01", 
-				"A33_004": "9-10-422", 
-				"A33_005": "入境学", 
-				"A33_006": "釧路郡釧路町入境学", 
-				"A33_007": "9999/1/1", 
-				"A33_008": "0"
-			}, 
-			"geometry": { 
-			"type": "MultiPolygon", 
-			"coordinates": [ [ [ 
-				[ 144.677679851, 42.939062999 ], [ 144.677874066, 42.939025220 ] 
-			] ] ]
-		}
-	}
-	`
-	f2.Write([]byte(f2str))
+	var path string = "./zipdata.zip"
 
-	w.Close()
+	if err := testdata.Create土砂災害警戒区域Data(path); err != nil {
+		t.Fatal(err, "Error creating test data")
+	}
 
-	// run the implementation
 	opts := GetDataOpts{
 		RawDataPath: path,
 	}
@@ -100,8 +39,12 @@ func Test土砂災害警戒区域(t *testing.T) {
 	if len(geojsonld) != 2 {
 		t.Errorf("Expected 2 features but got %d", len(geojsonld))
 	}
-	cmpFeature([]byte(geojsonld[0]), []byte(f1str))
-	cmpFeature([]byte(geojsonld[1]), []byte(f2str))
+	cmpFeature([]byte(geojsonld[0]), []byte(testdata.F1土砂災害警戒区域))
+	cmpFeature([]byte(geojsonld[1]), []byte(testdata.F2土砂災害警戒区域))
+
+	if err := testdata.Tear土砂災害警戒区域Data(path); err != nil {
+		t.Fatal(err, "Error tearing down test data")
+	}
 }
 
 func cmpFeature(geojsonld, exp []byte) (bool, error) {

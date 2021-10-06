@@ -23,6 +23,7 @@ func init() {
 func main() {
 
 	var dt string
+	var output string
 	var raw string
 
 	app := &cli.App{
@@ -41,6 +42,12 @@ func main() {
 				Usage:       "data path to read raw data",
 				Destination: &raw,
 			},
+			&cli.StringFlag{
+				Name:        "output",
+				Aliases:     []string{"o"},
+				Usage:       "output path to save geojson data",
+				Destination: &output,
+			},
 		},
 		Action: func(c *cli.Context) error {
 			repo, err := repo.NewSaveRepo()
@@ -51,6 +58,7 @@ func main() {
 			opts := service.Opts{
 				DataType:    dt,
 				RawDataPath: raw,
+				SavePath:    output,
 			}
 
 			s, err := service.NewService(repo, opts)
