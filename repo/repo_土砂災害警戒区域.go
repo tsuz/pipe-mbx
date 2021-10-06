@@ -60,13 +60,11 @@ func (s *土砂災害警戒区域) GetData(opts GetDataOpts) (io.Reader, error) 
 					// We expect A33_001 to be a string but sometimes we get an integer
 					a31, ok := m.Properties["A33_001"].(int)
 					if ok {
-						log.Info("Updating A33_001")
 						m.Properties["A33_001"] = strconv.Itoa(a31)
 					}
 					// We expect A33_002 to be a string but sometimes we get an integer
 					a32, ok := m.Properties["A33_002"].(int)
 					if ok {
-						log.Info("Updating A33_002")
 						m.Properties["A33_002"] = strconv.Itoa(a32)
 					}
 
